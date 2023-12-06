@@ -1,0 +1,87 @@
+package cmsc495;
+
+import javax.swing.*;  
+import java.awt.*;
+import java.awt.event.ActionEvent;
+
+public class CMSC495 {
+    public static void main(String[] args) {
+        JFrame frame = new JFrame("Movie Reservation System");
+        JLabel label1 = new JLabel("Movie Listings");
+        JLabel label2 = new JLabel("Your Reservations");
+        JButton button1 = new JButton("Make Reservation");
+        JButton button2 = new JButton("Cancel Reservation");
+
+        label1.setBounds(35,30,200,30);
+        label2.setBounds(35,260,200,30);
+        button1.setBounds(375,80,150,40);
+        button2.setBounds(375,310,150,40);
+
+        label1.setFont(new Font("Serif", Font.PLAIN, 20));
+        label2.setFont(new Font("Serif", Font.PLAIN, 20));
+
+        DefaultListModel<String> l1 = new DefaultListModel<>();
+        l1.addElement("Movie A");  
+        l1.addElement("Movie B");  
+        l1.addElement("Movie C");  
+        l1.addElement("Movie D");  
+        JList<String> list1 = new JList<>(l1);  
+        list1.setBounds(35, 80, 300,150);
+        list1.setFont(new Font("Serif", Font.PLAIN, 18));
+
+        DefaultListModel<String> l2 = new DefaultListModel<>();
+        JList<String> list2 = new JList<>(l2);  
+        list2.setBounds(35,310, 300, 150);  
+        list2.setFont(new Font("Serif", Font.PLAIN, 18));
+
+        frame.add(label1); 
+        frame.add(label2); 
+        frame.add(button1); 
+        frame.add(button2); 
+        frame.add(list1);
+        frame.add(list2);
+
+        frame.setSize(600,500);  
+        frame.setLayout(null);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
+
+        button1.addActionListener((ActionEvent e) -> {
+            String selectedMovie = list1.getSelectedValue();
+            if (selectedMovie == null) {
+                JOptionPane.showMessageDialog(frame, "Please select a movie from the list.");
+                return;
+            }
+            JPanel panel2 = new JPanel();
+            panel2.setLayout(new BoxLayout(panel2, BoxLayout.Y_AXIS));
+
+            JLabel label3 = new JLabel("Select Movie Time:");
+            JRadioButton button5 = new JRadioButton("Time 1");
+            JRadioButton button6 = new JRadioButton("Time 2");
+            ButtonGroup bgroup1 = new ButtonGroup();
+            bgroup1.add(button5);
+            bgroup1.add(button6);
+            JPanel radiobuttonpanel = new JPanel();
+            radiobuttonpanel.add(label3);
+            radiobuttonpanel.add(button5);
+            radiobuttonpanel.add(button6);
+
+            panel2.add(radiobuttonpanel);
+            
+            int result = JOptionPane.showConfirmDialog(frame, panel2, "Make Reservation", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+            if (result == JOptionPane.OK_OPTION) {
+                l2.addElement(selectedMovie + " - " + (button5.isSelected() ? "Time 1" : "Time 2"));
+            }
+        });
+
+        button2.addActionListener(e -> {
+            String selectedReservation = list2.getSelectedValue();
+            if (selectedReservation == null) {
+                JOptionPane.showMessageDialog(frame, "Please select a reservation from the list.");
+                return;
+            }
+            l2.removeElement(selectedReservation);
+            JOptionPane.showMessageDialog(frame, "Reservation cancelled successfully.");
+        });
+    }
+}
